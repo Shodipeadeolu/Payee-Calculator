@@ -16,27 +16,49 @@
       --text:#e5e7eb;
       --danger:#ef4444;
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0; padding:24px;
-      font-family: Inter, system-ui, sans-serif;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: radial-gradient(1200px 600px at 10% -10%, #1e293b, transparent), var(--bg);
       color:var(--text);
     }
+
     .app{
       max-width:1200px; margin:auto;
       display:grid; grid-template-columns: 1.2fr 0.8fr; gap:24px;
+      animation:fadeIn .6s ease;
     }
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
     .card{
       background:linear-gradient(180deg, #111827, #0b1220);
       border-radius:22px;
       padding:24px;
       box-shadow:0 25px 50px rgba(0,0,0,.35);
+      transition:transform .25s ease, box-shadow .25s ease;
     }
+
+    .card:hover{
+      transform:translateY(-2px);
+      box-shadow:0 35px 70px rgba(0,0,0,.45);
+    }
+
     h1{font-size:28px;margin:0}
     .subtitle{color:var(--muted);font-size:14px;margin-top:4px}
-    h2{margin:26px 0 12px;font-size:15px;color:#c7d2fe}
+
+    h2{
+      margin:26px 0 12px;
+      font-size:15px;
+      letter-spacing:.4px;
+      color:#c7d2fe;
+    }
+
     label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
+
     input{
       width:100%;
       padding:14px 16px;
@@ -45,96 +67,257 @@
       background:var(--soft);
       color:var(--text);
       font-size:15px;
+      outline:none;
+      transition:border .2s ease, box-shadow .2s ease;
     }
+
+    input:focus{
+      border-color:var(--accent2);
+      box-shadow:0 0 0 3px rgba(99,102,241,.25);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 88px;
+      gap:12px;
+      align-items:center;
+    }
+
+    .pill{
+      position:relative;
+      text-align:center;
+      font-weight:700;
+      background:#020617;
+      padding-right:26px;
+    }
+
+    .pill::after{
+      content:'%';
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    button{
+      border:none;
+      border-radius:14px;
+      padding:14px 18px;
+      background:linear-gradient(135deg, #22c55e, #16a34a);
+      color:#052e16;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .15s ease, filter .15s ease;
+    }
+
+    button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+    button:active{transform:scale(.98)}
+
+    .ghost{
+      background:#020617;
+      color:var(--muted);
+    }
+
+    /* SUMMARY CARDS */
+    .summary{
+      display:grid;
+      grid-template-columns: repeat(2,1fr);
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .summary-card{
+      background:#020617;
+      border-radius:18px;
+      padding:18px;
+      animation:fadeIn .8s ease;
+    }
+
+    .summary-card span{font-size:12px;color:var(--muted)}
+    .summary-card strong{font-size:22px;display:block;margin-top:6px}
+
+    .accent{color:var(--accent)}
+
     table{width:100%;border-collapse:collapse;margin-top:8px}
     tr+tr{border-top:1px dashed #1f2937}
     td{padding:12px 0;font-size:14px}
     td:last-child{text-align:right}
+
+    /* SIMPLE BAR CHART */
+    .bar{
+      height:8px;
+      background:#020617;
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:6px;
+    }
+
+    .bar span{
+      display:block;
+      height:100%;
+      background:linear-gradient(90deg,var(--accent2),var(--accent));
+      width:0%;
+      transition:width .6s ease;
+    }
+
+    @media(max-width:900px){
+      .app{grid-template-columns:1fr}
+      body{padding:14px}
+
+      .row{
+        grid-template-columns:1fr 70px;
+      }
+
+      h1{font-size:22px}
+      .summary{grid-template-columns:1fr}
+    }
+
+    @media(max-width:480px){
+      input{padding:12px 14px;font-size:14px}
+      .pill{font-size:13px}
+      .summary-card strong{font-size:20px}
+    }
+      body{padding:16px}
+    }
   </style>
 </head>
-
 <body>
 
 <div class="app">
 
+  <!-- INPUTS -->
   <div class="card">
     <h1>Nigeria PAYE</h1>
     <div class="subtitle">Annual personal income tax calculator · 2026</div>
 
     <h2>Income</h2>
-    <label>Annual Gross Income (₦)</label>
-    <input id="gross" placeholder="Enter annual gross income" />
+    <label>Annual Gross Income (₦) <span style="color:var(--danger)">*</span></label>
+    <input id="gross" value="" placeholder="Enter annual gross income" required />
+
+    <h2>Allowances</h2>
+
+    <label>Basic Salary</label>
+    <div class="row">
+      <input id="basic" readonly />
+      <input id="basicPct" class="pill" type="number" step="0.1" value="24.4" />
+    </div>
+
+    <label>Housing Allowance</label>
+    <div class="row">
+      <input id="housing" readonly />
+      <input id="housingPct" class="pill" type="number" step="0.1" value="14.6" />
+    </div>
+
+    <label>Transport Allowance</label>
+    <div class="row">
+      <input id="transport" readonly />
+      <input id="transportPct" class="pill" type="number" step="0.1" value="4.9" />
+    </div>
+
+    <label>Other Allowances (auto-balanced)</label>
+    <input id="others" readonly />
 
     <h2>Relief</h2>
-    <label>Annual Rent Paid (₦)</label>
-    <input id="rent" placeholder="Enter annual rent paid" />
+    <label>Annual Rent Paid (₦) <span style="color:var(--danger)">*</span></label>
+    <input id="rent" value="" placeholder="Enter annual rent paid" required />
   </div>
 
+  <!-- SUMMARY -->
   <div class="card">
+
+    <div class="summary">
+      <div class="summary-card">
+        <span>PAYE per annum</span>
+        <strong id="annualTax" class="accent">₦0</strong>
+        <small id="monthlyTax" style="color:var(--muted);font-size:12px">₦0 per month</small>
+        <div class="bar"><span id="taxBar"></span></div>
+      </div>
+
+      <div class="summary-card">
+        <span>Effective tax rate</span>
+        <strong id="effectiveRate">0%</strong>
+        <div class="bar"><span id="rateBar"></span></div>
+
+    <p style="margin-top:24px;font-size:11px;color:var(--muted);line-height:1.4">
+      <strong>Disclaimer:</strong> This calculator is provided for informational purposes only and does not constitute tax, legal, or financial advice. PAYE outcomes may vary based on individual circumstances and applicable regulations. Please consult a qualified tax professional or the relevant tax authority for official guidance.
+      <br/><br/>
+      Built by <a href="https://www.linkedin.com/in/adeolu-shodipe-bsc-mba-337290111/" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:600">Adeolu Shodipe</a>
+    </p>
+
+  </div>
+</div>
+
+    <h2>Tax breakdown</h2>
+    <table><tbody id="taxTable"></tbody></table>
 
     <h2>Deductions</h2>
     <table>
       <tr><td>Pension</td><td id="pension">0</td></tr>
       <tr><td>NHF</td><td id="nhf">0</td></tr>
-      <tr><td>Rent relief</td><td id="rentRelief">0</td></tr>
+      <tr><td>Rent relief (20% of rent, max ₦500,000)</td><td id="rentRelief">0</td></tr>
       <tr><td><strong>Taxable income</strong></td><td id="taxable">0</td></tr>
     </table>
 
-    <h2>Tax breakdown</h2>
-    <table><tbody id="taxTable"></tbody></table>
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <button id="exportCsvBtn">Export CSV</button>
+      <button class="ghost" onclick="window.print()">PDF</button>
+    </div>
 
   </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
-  const bands=[
-    {label:'First ₦800,000',limit:800000,rate:0},
-    {label:'Next ₦2,200,000',limit:2200000,rate:.15},
-    {label:'Next ₦9,000,000',limit:9000000,rate:.18},
-    {label:'Next ₦13,000,000',limit:13000000,rate:.21},
-    {label:'Next ₦25,000,000',limit:25000000,rate:.23},
-    {label:'Above ₦50,000,000',limit:Infinity,rate:.25}
-  ];
-
+  const bands=[{label:'First ₦800,000',limit:800000,rate:0},{label:'Next ₦2,200,000',limit:2200000,rate:.15},{label:'Next ₦9,000,000',limit:9000000,rate:.18},{label:'Next ₦13,000,000',limit:13000000,rate:.21},{label:'Next ₦25,000,000',limit:25000000,rate:.23},{label:'Above ₦50,000,000',limit:Infinity,rate:.25}];
   const p=v=>Number(String(v).replace(/,/g,''))||0;
   const f=n=>n.toLocaleString('en-NG',{maximumFractionDigits:2});
   const el=id=>document.getElementById(id);
 
-  const gross=el('gross'), rent=el('rent');
-  const pension=el('pension'), nhf=el('nhf'), rr=el('rentRelief'), taxable=el('taxable');
-  const taxTable=el('taxTable');
+  const gross=el('gross'),rent=el('rent');
+  const basic=el('basic'),housing=el('housing'),transport=el('transport'),others=el('others');
+  const bp=el('basicPct'),hp=el('housingPct'),tp=el('transportPct');
+  const pension=el('pension'),nhf=el('nhf'),rr=el('rentRelief'),taxable=el('taxable');
+  const taxTable=el('taxTable'),annual=el('annualTax'),rate=el('effectiveRate');
+  const taxBar=el('taxBar'),rateBar=el('rateBar'),monthly=el('monthlyTax');
 
   function calc(){
-    if(!gross.value) return;
-
+    // If gross is not entered, do nothing
+    if(!gross.value){
+      annual.textContent = '₦0';
+      rate.textContent = '0%';
+      taxBar.style.width = '0%';
+      rateBar.style.width = '0%';
+      return;
+    }
     const g=p(gross.value);
-    const r=rent.value ? p(rent.value) : 0;
+    const r = rent.value ? p(rent.value) : 0;
+    const b=g*(bp.value/100),h=g*(hp.value/100),t=g*(tp.value/100);
+    const o=Math.max(0,g-(b+h+t));
+    basic.value=f(b); housing.value=f(h); transport.value=f(t); others.value=f(o);
 
-    const pen=g*.08;
-    const n=g*.025;
-
-    /* ✅ UPDATED RENT RELIEF */
-    const relief=Math.min(r * 0.20, 500000);
-
+    const pen=(b+h+t)*.08, n=b*.025, relief=Math.min(r*0.2, 500000);
     const tx=Math.max(0,g-(pen+n+relief));
+    pension.textContent=f(pen); nhf.textContent=f(n); rr.textContent = rent.value ? f(relief) : 'Enter rent'; taxable.textContent=f(tx);
 
-    pension.textContent=f(pen);
-    nhf.textContent=f(n);
-    rr.textContent=f(relief);
-    taxable.textContent=f(tx);
+    let rem=tx,tot=0; taxTable.innerHTML='';
+    // Prompt user to enter rent if missing
+    if(!rent.value){
+      rr.textContent = 'Enter rent';
+    }
 
-    let rem=tx; taxTable.innerHTML='';
-    bands.forEach(b=>{
-      if(rem<=0) return;
-      const amt=Math.min(rem,b.limit);
-      const tax=amt*b.rate;
-      rem-=amt;
-      taxTable.innerHTML+=`<tr><td>${b.label}</td><td>${f(tax)}</td></tr>`;
-    });
+    bands.forEach(x=>{if(rem<=0)return;const y=Math.min(rem,x.limit),z=y*x.rate;rem-=y;tot+=z;taxTable.innerHTML+=`<tr><td>${x.label}</td><td>${f(z)}</td></tr>`});
+
+    annual.textContent='₦'+f(tot);
+    monthly.textContent='₦'+f(tot/12)+' per month';
+    const eff=g?(tot/g*100):0; rate.textContent=eff.toFixed(2)+'%';
+    taxBar.style.width=Math.min(100,eff)+'%';
+    rateBar.style.width=Math.min(100,eff*2)+'%';
   }
 
   document.querySelectorAll('input').forEach(i=>i.oninput=calc);
+  calc();
 });
 </script>
 
