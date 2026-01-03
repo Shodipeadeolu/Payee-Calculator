@@ -231,6 +231,7 @@
       <div class="summary-card">
         <span>PAYE per annum</span>
         <strong id="annualTax" class="accent">₦0</strong>
+        <small id="monthlyTax" style="color:var(--muted);font-size:12px">₦0 per month</small>
         <div class="bar"><span id="taxBar"></span></div>
       </div>
 
@@ -279,7 +280,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const bp=el('basicPct'),hp=el('housingPct'),tp=el('transportPct');
   const pension=el('pension'),nhf=el('nhf'),rr=el('rentRelief'),taxable=el('taxable');
   const taxTable=el('taxTable'),annual=el('annualTax'),rate=el('effectiveRate');
-  const taxBar=el('taxBar'),rateBar=el('rateBar');
+  const taxBar=el('taxBar'),rateBar=el('rateBar'),monthly=el('monthlyTax');
 
   function calc(){
     // If gross is not entered, do nothing
@@ -309,6 +310,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     bands.forEach(x=>{if(rem<=0)return;const y=Math.min(rem,x.limit),z=y*x.rate;rem-=y;tot+=z;taxTable.innerHTML+=`<tr><td>${x.label}</td><td>${f(z)}</td></tr>`});
 
     annual.textContent='₦'+f(tot);
+    monthly.textContent='₦'+f(tot/12)+' per month';
     const eff=g?(tot/g*100):0; rate.textContent=eff.toFixed(2)+'%';
     taxBar.style.width=Math.min(100,eff)+'%';
     rateBar.style.width=Math.min(100,eff*2)+'%';
