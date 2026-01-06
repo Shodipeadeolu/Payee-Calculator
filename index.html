@@ -38,8 +38,8 @@
 <body>
 
 <div class="tabs">
-  <button class="ghost" onclick="showTab('calc')">Tax Calculator</button>
-  <button class="ghost" onclick="showTab('summary')">Payslip</button>
+  <button class="ghost" onclick="showTab('calc')">Employee Tax Calculator</button>
+  <button class="ghost" onclick="showTab('summary')">Employee Payslip</button>
 </div>
 
 <div class="app" id="calcTab">
@@ -112,18 +112,27 @@
   <div class="card" style="grid-column:1/-1;padding:0;overflow:hidden">
 
     <div style="background:#0b1220;padding:18px 24px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;font-size:12px">
-      <div><strong>Employee No.</strong><br/>001</div>
-      <div><strong>Employee</strong><br/><span id="psEmpName">Employee Name</span></div>
-      <div><strong>Date</strong><br/><span id="psDate">Current Period</span></div>
-      <div><strong>National ID</strong><br/>—</div>
+      <div>
+        <strong>Employee No.</strong><br/>
+        <input id="psEmpNo" placeholder="e.g. 001" style="margin-top:6px;padding:6px 8px;font-size:12px" />
+      </div>
+      <div>
+        <strong>Employee</strong><br/>
+        <input id="psEmpName" placeholder="Employee Name" style="margin-top:6px;padding:6px 8px;font-size:12px" />
+      </div>
+      <div>
+        <strong>Date</strong><br/>
+        <input id="psDate" placeholder="e.g. March 2026" style="margin-top:6px;padding:6px 8px;font-size:12px" />
+      </div>
+      
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #1f2937">
       <div style="padding:24px">
-        <h2>Payments</h2>
+        <h2>Salary</h2>
         <table>
-          <tr><td>Basic Pay</td><td id="psBasic">0</td></tr>
-          <tr><td><strong>Total Payments</strong></td><td id="psTotalPay">0</td></tr>
+          
+          <tr><td><strong>Total Salary</strong></td><td id="psTotalPay">0</td></tr>
         </table>
       </div>
       <div style="padding:24px;border-left:1px solid #1f2937">
@@ -140,7 +149,7 @@
     <div style="background:#020617;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr">
       <div>
         <strong>Totals This Period</strong>
-        <p style="margin:6px 0">Payments: <span id="psTotalPay2">0</span></p>
+        <p style="margin:6px 0">Salary: <span id="psTotalPay2">0</span></p>
         <p style="margin:0">Deductions: <span id="psTotalDed2">0</span></p>
       </div>
       <div style="text-align:right">
@@ -180,7 +189,7 @@ function calc(){
  const eff=G?tax/G*100:0;effectiveRate.textContent=eff.toFixed(2)+'%';rateBar.style.width=Math.min(100,eff*2)+'%';
 
  // Payslip wiring (monthly)
- psBasic.textContent=f(b/12);
+ 
  psTotalPay.textContent=f(G/12);
  psTotalPay2.textContent=f(G/12);
  psPension.textContent=f(pen/12);
