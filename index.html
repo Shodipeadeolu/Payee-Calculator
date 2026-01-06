@@ -7,319 +7,190 @@
 
   <style>
     :root{
-      --bg:#0f172a;
-      --card:#111827;
-      --soft:#1f2933;
-      --accent:#22c55e;
-      --accent2:#6366f1;
-      --muted:#9ca3af;
-      --text:#e5e7eb;
-      --danger:#ef4444;
+      --bg:#0f172a;--card:#111827;--soft:#1f2933;--accent:#22c55e;--accent2:#6366f1;
+      --muted:#9ca3af;--text:#e5e7eb;--danger:#ef4444;
     }
-
     *{box-sizing:border-box}
-
-    body{
-      margin:0; padding:24px;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: radial-gradient(1200px 600px at 10% -10%, #1e293b, transparent), var(--bg);
-      color:var(--text);
-    }
-
-    .app{
-      max-width:1200px; margin:auto;
-      display:grid; grid-template-columns: 1.2fr 0.8fr; gap:24px;
-      animation:fadeIn .6s ease;
-    }
-
-    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-
-    .card{
-      background:linear-gradient(180deg, #111827, #0b1220);
-      border-radius:22px;
-      padding:24px;
-      box-shadow:0 25px 50px rgba(0,0,0,.35);
-      transition:transform .25s ease, box-shadow .25s ease;
-    }
-
-    .card:hover{
-      transform:translateY(-2px);
-      box-shadow:0 35px 70px rgba(0,0,0,.45);
-    }
-
-    h1{font-size:28px;margin:0}
-    .subtitle{color:var(--muted);font-size:14px;margin-top:4px}
-
-    h2{
-      margin:26px 0 12px;
-      font-size:15px;
-      letter-spacing:.4px;
-      color:#c7d2fe;
-    }
-
+    body{margin:0;padding:24px;font-family:Inter,system-ui;background:radial-gradient(1200px 600px at 10% -10%,#1e293b,transparent),var(--bg);color:var(--text)}
+    .tabs{display:flex;gap:12px;margin-bottom:16px}
+    .app{max-width:1200px;margin:auto;display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
+    .card{background:linear-gradient(180deg,#111827,#0b1220);border-radius:22px;padding:24px;box-shadow:0 25px 50px rgba(0,0,0,.35)}
+    h1{font-size:28px;margin:0} h2{margin:26px 0 12px;font-size:15px;color:#c7d2fe}
     label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
-
-    input{
-      width:100%;
-      padding:14px 16px;
-      border-radius:14px;
-      border:1px solid #1f2937;
-      background:var(--soft);
-      color:var(--text);
-      font-size:15px;
-      outline:none;
-      transition:border .2s ease, box-shadow .2s ease;
-    }
-
-    input:focus{
-      border-color:var(--accent2);
-      box-shadow:0 0 0 3px rgba(99,102,241,.25);
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns: 1fr 88px;
-      gap:12px;
-      align-items:center;
-    }
-
-    .pill{
-      position:relative;
-      text-align:center;
-      font-weight:700;
-      background:#020617;
-      padding-right:26px;
-    }
-
-    .pill::after{
-      content:'%';
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    button{
-      border:none;
-      border-radius:14px;
-      padding:14px 18px;
-      background:linear-gradient(135deg, #22c55e, #16a34a);
-      color:#052e16;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .15s ease, filter .15s ease;
-    }
-
-    button:hover{transform:translateY(-1px);filter:brightness(1.05)}
-    button:active{transform:scale(.98)}
-
-    .ghost{
-      background:#020617;
-      color:var(--muted);
-    }
-
-    /* SUMMARY CARDS */
-    .summary{
-      display:grid;
-      grid-template-columns: repeat(2,1fr);
-      gap:14px;
-      margin-bottom:18px;
-    }
-
-    .summary-card{
-      background:#020617;
-      border-radius:18px;
-      padding:18px;
-      animation:fadeIn .8s ease;
-    }
-
+    input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #1f2937;background:var(--soft);color:var(--text)}
+    .row{display:grid;grid-template-columns:1fr 88px;gap:12px}
+    .pill{position:relative;text-align:center;font-weight:700;background:#020617;padding-right:26px}
+    .pill::after{content:'%';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px}
+    button{border:none;border-radius:14px;padding:14px 18px;background:linear-gradient(135deg,#22c55e,#16a34a);font-weight:800;cursor:pointer}
+    .ghost{background:#020617;color:var(--muted)}
+    .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}
+    .summary-card{background:#020617;border-radius:18px;padding:18px}
     .summary-card span{font-size:12px;color:var(--muted)}
     .summary-card strong{font-size:22px;display:block;margin-top:6px}
-
-    .accent{color:var(--accent)}
-
     table{width:100%;border-collapse:collapse;margin-top:8px}
     tr+tr{border-top:1px dashed #1f2937}
-    td{padding:12px 0;font-size:14px}
-    td:last-child{text-align:right}
-
-    /* SIMPLE BAR CHART */
-    .bar{
-      height:8px;
-      background:#020617;
-      border-radius:999px;
-      overflow:hidden;
-      margin-top:6px;
-    }
-
-    .bar span{
-      display:block;
-      height:100%;
-      background:linear-gradient(90deg,var(--accent2),var(--accent));
-      width:0%;
-      transition:width .6s ease;
-    }
-
-    @media(max-width:900px){
-      .app{grid-template-columns:1fr}
-      body{padding:14px}
-
-      .row{
-        grid-template-columns:1fr 70px;
-      }
-
-      h1{font-size:22px}
-      .summary{grid-template-columns:1fr}
-    }
-
-    @media(max-width:480px){
-      input{padding:12px 14px;font-size:14px}
-      .pill{font-size:13px}
-      .summary-card strong{font-size:20px}
-    }
-      body{padding:16px}
-    }
+    td{padding:12px 0;font-size:14px} td:last-child{text-align:right}
+    .bar{height:8px;background:#020617;border-radius:999px;overflow:hidden;margin-top:6px}
+    .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0%;transition:width .6s}
+    @media(max-width:900px){.app{grid-template-columns:1fr}.summary{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 
-<div class="app">
+<div class="tabs">
+  <button class="ghost" onclick="showTab('calc')">Tax Calculator</button>
+  <button class="ghost" onclick="showTab('summary')">Payslip</button>
+</div>
 
-  <!-- INPUTS -->
+<div class="app" id="calcTab">
   <div class="card">
     <h1>Nigeria PAYE</h1>
-    <div class="subtitle">Annual personal income tax calculator · 2026</div>
-
     <h2>Income</h2>
     <label>Annual Gross Income (₦) <span style="color:var(--danger)">*</span></label>
-    <input id="gross" value="" placeholder="Enter annual gross income" required />
+    <input id="gross" />
 
     <h2>Allowances</h2>
-
     <label>Basic Salary</label>
-    <div class="row">
-      <input id="basic" readonly />
-      <input id="basicPct" class="pill" type="number" step="0.1" value="24.4" />
-    </div>
+    <div class="row"><input id="basic" readonly /><input id="basicPct" class="pill" type="number" value="24.4" /></div>
 
     <label>Housing Allowance</label>
-    <div class="row">
-      <input id="housing" readonly />
-      <input id="housingPct" class="pill" type="number" step="0.1" value="14.6" />
-    </div>
+    <div class="row"><input id="housing" readonly /><input id="housingPct" class="pill" type="number" value="14.6" /></div>
 
     <label>Transport Allowance</label>
-    <div class="row">
-      <input id="transport" readonly />
-      <input id="transportPct" class="pill" type="number" step="0.1" value="4.9" />
-    </div>
+    <div class="row"><input id="transport" readonly /><input id="transportPct" class="pill" type="number" value="4.9" /></div>
 
-    <label>Other Allowances (auto-balanced)</label>
+    <label>Other Allowances</label>
     <input id="others" readonly />
 
     <h2>Relief</h2>
     <label>Annual Rent Paid (₦) <span style="color:var(--danger)">*</span></label>
-    <input id="rent" value="" placeholder="Enter annual rent paid" required />
+    <input id="rent" />
   </div>
 
-  <!-- SUMMARY -->
   <div class="card">
-
     <div class="summary">
-      <div class="summary-card">
-        <span>PAYE per annum</span>
-        <strong id="annualTax" class="accent">₦0</strong>
-        <small id="monthlyTax" style="color:var(--muted);font-size:12px">₦0 per month</small>
-        <div class="bar"><span id="taxBar"></span></div>
-      </div>
-
       <div class="summary-card">
         <span>Effective tax rate</span>
         <strong id="effectiveRate">0%</strong>
         <div class="bar"><span id="rateBar"></span></div>
-
-    <p style="margin-top:24px;font-size:11px;color:var(--muted);line-height:1.4">
-      <strong>Disclaimer:</strong> This calculator is provided for informational purposes only and does not constitute tax, legal, or financial advice. PAYE outcomes may vary based on individual circumstances and applicable regulations. Please consult a qualified tax professional or the relevant tax authority for official guidance.
-      <br/><br/>
-      Built by <a href="https://www.linkedin.com/in/adeolu-shodipe-bsc-mba-337290111/" target="_blank" style="color:#60a5fa;text-decoration:none;font-weight:600">Adeolu Shodipe</a>
-    </p>
-
-  </div>
-</div>
-
-    <h2>Tax breakdown</h2>
-    <table><tbody id="taxTable"></tbody></table>
+        <h3 style="margin:14px 0 6px;font-size:13px">Disclaimer:</h3>
+        <p style="font-size:12px;color:var(--muted);line-height:1.6">
+          This calculator is provided for informational purposes only and does not constitute tax, legal, or financial advice.
+          PAYE outcomes may vary based on individual circumstances and applicable regulations.
+          Please consult a qualified tax professional or the relevant tax authority for official guidance.
+        </p>
+        <p style="font-size:12px;color:var(--muted)">Built by <a href="https://www.linkedin.com/in/adeolu-shodipe-bsc-mba-337290111/" target="_blank" style="color:#60a5fa;text-decoration:none">Adeolu Shodipe</a></p>
+      </div>
+      <div class="summary-card">
+        <span>PAYE per annum</span>
+        <strong id="annualTax">₦0</strong>
+        <span id="monthlyTax">₦0 per month</span>
+      </div>
+    </div>
 
     <h2>Deductions</h2>
     <table>
       <tr><td>Pension</td><td id="pension">0</td></tr>
       <tr><td>NHF</td><td id="nhf">0</td></tr>
-      <tr><td>Rent relief (20% of rent, max ₦500,000)</td><td id="rentRelief">0</td></tr>
+      <tr><td>Rent relief</td><td id="rentRelief">0</td></tr>
       <tr><td><strong>Taxable income</strong></td><td id="taxable">0</td></tr>
     </table>
 
-    <div style="display:flex;gap:12px;margin-top:20px">
-      <button id="exportCsvBtn">Export CSV</button>
-      <button class="ghost" onclick="window.print()">PDF</button>
+    <h2>Tax breakdown</h2>
+    <table>
+      <tr><td>First ₦800,000</td><td id="b1">0</td></tr>
+      <tr><td>Next ₦2,200,000</td><td id="b2">0</td></tr>
+      <tr><td>Next ₦9,000,000</td><td id="b3">0</td></tr>
+      <tr><td>Next ₦13,000,000</td><td id="b4">0</td></tr>
+      <tr><td>Next ₦25,000,000</td><td id="b5">0</td></tr>
+      <tr><td>Above ₦50,000,000</td><td id="b6">0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="app" id="summaryTab" style="display:none">
+  <div class="card" style="grid-column:1/-1;padding:0;overflow:hidden">
+
+    <div style="background:#0b1220;padding:18px 24px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;font-size:12px">
+      <div><strong>Employee No.</strong><br/>001</div>
+      <div><strong>Employee</strong><br/><span id="psEmpName">Employee Name</span></div>
+      <div><strong>Date</strong><br/><span id="psDate">Current Period</span></div>
+      <div><strong>National ID</strong><br/>—</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #1f2937">
+      <div style="padding:24px">
+        <h2>Payments</h2>
+        <table>
+          <tr><td>Basic Pay</td><td id="psBasic">0</td></tr>
+          <tr><td><strong>Total Payments</strong></td><td id="psTotalPay">0</td></tr>
+        </table>
+      </div>
+      <div style="padding:24px;border-left:1px solid #1f2937">
+        <h2>Deductions</h2>
+        <table>
+          <tr><td>Pension</td><td id="psPension">0</td></tr>
+          <tr><td>NHF</td><td id="psNHF">0</td></tr>
+          <tr><td>PAYE</td><td id="psPAYE">0</td></tr>
+          <tr><td><strong>Total Deductions</strong></td><td id="psTotalDed">0</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div style="background:#020617;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr">
+      <div>
+        <strong>Totals This Period</strong>
+        <p style="margin:6px 0">Payments: <span id="psTotalPay2">0</span></p>
+        <p style="margin:0">Deductions: <span id="psTotalDed2">0</span></p>
+      </div>
+      <div style="text-align:right">
+        <div style="background:#020617;border-radius:14px;padding:16px;display:inline-block">
+          <span style="font-size:12px;color:var(--muted)">Net Pay</span>
+          <strong style="display:block;font-size:22px;color:var(--accent)" id="psNet">0</strong>
+        </div>
+      </div>
     </div>
 
   </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded',()=>{
-  const bands=[{label:'First ₦800,000',limit:800000,rate:0},{label:'Next ₦2,200,000',limit:2200000,rate:.15},{label:'Next ₦9,000,000',limit:9000000,rate:.18},{label:'Next ₦13,000,000',limit:13000000,rate:.21},{label:'Next ₦25,000,000',limit:25000000,rate:.23},{label:'Above ₦50,000,000',limit:Infinity,rate:.25}];
-  const p=v=>Number(String(v).replace(/,/g,''))||0;
-  const f=n=>n.toLocaleString('en-NG',{maximumFractionDigits:2});
-  const el=id=>document.getElementById(id);
+function showTab(t){calcTab.style.display=t==='calc'?'grid':'none';summaryTab.style.display=t==='summary'?'grid':'none'}
+const p=v=>Number(String(v).replace(/,/g,''))||0;
+const f=n=>n.toLocaleString('en-NG',{maximumFractionDigits:2});
+const g=gross, r=rent;
+const bp=basicPct,hp=housingPct,tp=transportPct;
 
-  const gross=el('gross'),rent=el('rent');
-  const basic=el('basic'),housing=el('housing'),transport=el('transport'),others=el('others');
-  const bp=el('basicPct'),hp=el('housingPct'),tp=el('transportPct');
-  const pension=el('pension'),nhf=el('nhf'),rr=el('rentRelief'),taxable=el('taxable');
-  const taxTable=el('taxTable'),annual=el('annualTax'),rate=el('effectiveRate');
-  const taxBar=el('taxBar'),rateBar=el('rateBar'),monthly=el('monthlyTax');
+gross.oninput=rent.oninput=basicPct.oninput=housingPct.oninput=transportPct.oninput=calc;
 
-  function calc(){
-    // If gross is not entered, do nothing
-    if(!gross.value){
-      annual.textContent = '₦0';
-      rate.textContent = '0%';
-      taxBar.style.width = '0%';
-      rateBar.style.width = '0%';
-      return;
-    }
-    const g=p(gross.value);
-    const r = rent.value ? p(rent.value) : 0;
-    const b=g*(bp.value/100),h=g*(hp.value/100),t=g*(tp.value/100);
-    const o=Math.max(0,g-(b+h+t));
-    basic.value=f(b); housing.value=f(h); transport.value=f(t); others.value=f(o);
+function calc(){
+ if(!g.value) return;
+ const G=p(g.value),R=p(r.value);
+ const b=G*(bp.value/100),h=G*(hp.value/100),t=G*(tp.value/100);
+ const o=Math.max(0,G-(b+h+t));
+ basic.value=f(b);housing.value=f(h);transport.value=f(t);others.value=f(o);
+ const pen=(b+h+t)*.08, nh=b*.025, relief=Math.min(R*.2,500000);
+ pension.textContent=f(pen);nhf.textContent=f(nh);rentRelief.textContent=f(relief);
+ const tx=Math.max(0,G-(pen+nh+relief));taxable.textContent=f(tx);
+ const bands=[[800000,0],[2200000,.15],[9000000,.18],[13000000,.21],[25000000,.23],[1e18,.25]];
+ let rem=tx,tax=0,bd=[0,0,0,0,0,0];
+ bands.forEach((x,i)=>{if(rem<=0)return;const c=Math.min(rem,x[0]);bd[i]=c*x[1];tax+=bd[i];rem-=c});
+ [b1,b2,b3,b4,b5,b6].forEach((e,i)=>e.textContent=f(bd[i]));
+ annualTax.textContent='₦'+f(tax);monthlyTax.textContent='₦'+f(tax/12)+' per month';
+ const eff=G?tax/G*100:0;effectiveRate.textContent=eff.toFixed(2)+'%';rateBar.style.width=Math.min(100,eff*2)+'%';
 
-    const pen=(b+h+t)*.08, n=b*.025, relief=Math.min(r*0.2, 500000);
-    const tx=Math.max(0,g-(pen+n+relief));
-    pension.textContent=f(pen); nhf.textContent=f(n); rr.textContent = rent.value ? f(relief) : 'Enter rent'; taxable.textContent=f(tx);
-
-    let rem=tx,tot=0; taxTable.innerHTML='';
-    // Prompt user to enter rent if missing
-    if(!rent.value){
-      rr.textContent = 'Enter rent';
-    }
-
-    bands.forEach(x=>{if(rem<=0)return;const y=Math.min(rem,x.limit),z=y*x.rate;rem-=y;tot+=z;taxTable.innerHTML+=`<tr><td>${x.label}</td><td>${f(z)}</td></tr>`});
-
-    annual.textContent='₦'+f(tot);
-    monthly.textContent='₦'+f(tot/12)+' per month';
-    const eff=g?(tot/g*100):0; rate.textContent=eff.toFixed(2)+'%';
-    taxBar.style.width=Math.min(100,eff)+'%';
-    rateBar.style.width=Math.min(100,eff*2)+'%';
-  }
-
-  document.querySelectorAll('input').forEach(i=>i.oninput=calc);
-  calc();
-});
+ // Payslip wiring (monthly)
+ psBasic.textContent=f(b/12);
+ psTotalPay.textContent=f(G/12);
+ psTotalPay2.textContent=f(G/12);
+ psPension.textContent=f(pen/12);
+ psNHF.textContent=f(nh/12);
+ psPAYE.textContent=f(tax/12);
+ const totalDed=(pen+nh+tax)/12;
+ psTotalDed.textContent=f(totalDed);
+ psTotalDed2.textContent=f(totalDed);
+ psNet.textContent=f(G/12-totalDed);
+}
 </script>
-
 </body>
 </html>
