@@ -9,10 +9,11 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJCEWNH0Q5"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag(){dataLayer.push(arguments);} 
     gtag('js', new Date());
     gtag('config', 'G-KJCEWNH0Q5');
   </script>
+
   <style>
     :root{--bg:#0f172a;--card:#111827;--soft:#1f2933;--accent:#22c55e;--accent2:#6366f1;--muted:#9ca3af;--text:#e5e7eb;--danger:#ef4444;}
     *{box-sizing:border-box}
@@ -40,6 +41,19 @@
     .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0%;transition:width .6s}
     @media(max-width:900px){.app{grid-template-columns:1fr}.summary{grid-template-columns:1fr}}
   </style>
+
+  <script>
+  // Ensure showTab is defined before HTML onclick usage
+  window.showTab = function(t){
+    const c=document.getElementById('calcTab');
+    const s=document.getElementById('summaryTab');
+    const m=document.getElementById('multiTab');
+    if(!c||!s||!m) return;
+    c.style.display = t==='calc'?'grid':'none';
+    s.style.display = t==='summary'?'grid':'none';
+    m.style.display = t==='multi'?'grid':'none';
+  };
+  </script>
 </head>
 <body>
 
@@ -72,45 +86,43 @@
   </div>
   <div class="card">
     <div class="summary">
-      <div class="summary-card" style="grid-column:1/-1">
-        <span>Disclaimer:</span>
-        <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4">
-          This calculator is provided for informational purposes only and does not constitute tax, legal, or financial advice. PAYE outcomes may vary based on individual circumstances and applicable regulations. Please consult a qualified tax professional or the relevant tax authority for official guidance.
-        </div>
-        <div style="margin-top:10px;font-size:12px;color:var(--muted)">Built by <a href="https://www.linkedin.com/in/adeolu-shodipe-bsc-mba-337290111/" target="_blank" style="color:#60a5fa;text-decoration:none">Adeolu Shodipe</a></div>
-      </div>
       <div class="summary-card">
         <span>Effective tax rate</span>
         <strong id="effectiveRate">0%</strong>
         <div class="bar"><span id="rateBar"></span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.4">
+          <strong>Disclaimer:</strong><br>
+          This calculator is provided for informational purposes only and does not constitute tax, legal, or financial advice. PAYE outcomes may vary based on individual circumstances and applicable regulations. Please consult a qualified tax professional or the relevant tax authority for official guidance.
+          <div style="margin-top:8px">Built by <a href="https://www.linkedin.com/in/adeolu-shodipe-bsc-mba-337290111/" target="_blank" style="color:#60a5fa;text-decoration:none">Adeolu Shodipe</a></div>
+        </div>
       </div>
       <div class="summary-card">
-        <span>PAYE</span>
+        <span>PAYEE</span>
         <strong id="annualTax">₦0</strong>
         <span id="monthlyTax">₦0 per month</span>
       </div>
     </div>
     <div class="section">
-    <h2>Deductions</h2>
-    <table>
-      <tr><td>Statutory Pension</td><td id="pension">0</td></tr>
-      <tr><td>Voluntary Pension</td><td id="volPensionDed">0</td></tr>
-      <tr><td>NHF</td><td id="nhf">0</td></tr>
-      <tr><td>Rent relief</td><td id="rentRelief">0</td></tr>
-      <tr><td><strong>Taxable income</strong></td><td id="taxable">0</td></tr>
-    </table>
-  </div>
+      <h2>Deductions</h2>
+      <table>
+        <tr><td>Statutory Pension</td><td id="pension">0</td></tr>
+        <tr><td>Voluntary Pension</td><td id="volPensionDed">0</td></tr>
+        <tr><td>NHF</td><td id="nhf">0</td></tr>
+        <tr><td>Rent relief</td><td id="rentRelief">0</td></tr>
+        <tr><td><strong>Taxable income</strong></td><td id="taxable">0</td></tr>
+      </table>
+    </div>
     <div class="section">
-    <h2>Tax breakdown</h2>
-    <table>
-      <tr><td>First ₦800,000 @0%</td><td id="b1">0</td></tr>
-      <tr><td>Next ₦2,200,000 @15%</td><td id="b2">0</td></tr>
-      <tr><td>Next ₦9,000,000 @18%</td><td id="b3">0</td></tr>
-      <tr><td>Next ₦13,000,000 @21%</td><td id="b4">0</td></tr>
-      <tr><td>Next ₦25,000,000 @23%</td><td id="b5">0</td></tr>
-      <tr><td>Above ₦50,000,000 @25%</td><td id="b6">0</td></tr>
-    </table>
-  </div>
+      <h2>Tax breakdown</h2>
+      <table>
+        <tr><td>First ₦800,000 @0%</td><td id="b1">0</td></tr>
+        <tr><td>Next ₦2,200,000 @15%</td><td id="b2">0</td></tr>
+        <tr><td>Next ₦9,000,000 @18%</td><td id="b3">0</td></tr>
+        <tr><td>Next ₦13,000,000 @21%</td><td id="b4">0</td></tr>
+        <tr><td>Next ₦25,000,000 @23%</td><td id="b5">0</td></tr>
+        <tr><td>Above ₦50,000,000 @25%</td><td id="b6">0</td></tr>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -122,7 +134,6 @@
       <div><label>Date</label><input id="psDate" placeholder="e.g. January 2025"></div>
       <div><label>National ID</label><input id="psNIN" placeholder="e.g. NIN / NHIS"></div>
     </div>
-
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
       <div>
         <h2>Salary</h2>
@@ -136,12 +147,11 @@
           <tr><td>Statutory Pension</td><td id="psPension">0</td></tr>
           <tr><td>Voluntary Pension</td><td id="psVolPension">0</td></tr>
           <tr><td>NHF</td><td id="psNHF">0</td></tr>
-          <tr><td>PAYE</td><td id="psPAYE">0</td></tr>
+          <tr><td>PAYEE</td><td id="psPAYE">0</td></tr>
           <tr><td><strong>Total Deductions</strong></td><td id="psTotalDed">0</td></tr>
         </table>
       </div>
     </div>
-
     <div style="margin-top:24px;padding-top:16px;border-top:1px dashed #1f2937;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:end">
       <div>
         <h2>Totals This Period</h2>
@@ -160,37 +170,64 @@
   <div class="card" style="grid-column:1/-1">
     <h1>Multiple Employees Payroll</h1>
     <div style="display:flex;gap:12px;margin:12px 0">
+      <button onclick="exportExcel()">⬇️ Export to Excel</button>
       <button onclick="addEmployeeRow()">➕ Add Employee</button>
       <input type="file" accept=".csv" onchange="handleCSV(this.files[0])" />
     </div>
     <table id="multiTable">
       <thead>
-        <tr><th>Employee No</th><th>Name</th><th>Annual Gross</th><th>Annual Rent</th><th>Vol. Pension</th><th>PAYE</th><th>Net Pay</th><th></th></tr>
+        <tr><th>Employee No</th><th>Name</th><th>Annual Gross</th><th>Annual Rent</th><th>Vol. Pension</th><th>Monthly Gross</th><th>Monthly Deductions</th><th>Monthly PAYEE</th><th>Monthly Net Pay</th><th></th></tr>
       </thead>
       <tbody></tbody>
     </table>
     <h2>Company Totals</h2>
     <table>
-      <tr><td>Total Gross</td><td id="totGross">0</td></tr>
-      <tr><td>Total PAYE</td><td id="totTax">0</td></tr>
-      <tr><td>Total Net Pay</td><td id="totNet">0</td></tr>
+      <tr><td>Total Gross (Monthly)</td><td id="totGross">0</td></tr>
+      <tr><td>Total Deductions (Monthly)</td><td id="totDed">0</td></tr>
+      <tr><td>Total PAYEE (Monthly)</td><td id="totTax">0</td></tr>
+      <tr><td>Total Net Pay (Monthly)</td><td id="totNet">0</td></tr>
     </table>
   </div>
 </div>
 
 <script>
-window.showTab = function(t){
-  const c=document.getElementById('calcTab');
-  const s=document.getElementById('summaryTab');
-  const m=document.getElementById('multiTab');
-  if(!c||!s||!m) return;
-  c.style.display = t==='calc'?'grid':'none';
-  s.style.display = t==='summary'?'grid':'none';
-  m.style.display = t==='multi'?'grid':'none';
-};
-
+// Utility
 const p=v=>Number(String(v||'').replace(/,/g,''))||0;
 const f=n=>Number(n||0).toLocaleString('en-NG',{maximumFractionDigits:2});
+
+// Export to CSV (Excel)
+window.exportExcel = function(){
+  let rows=[["Employee No","Name","Annual Gross","Annual Rent","Voluntary Pension","Monthly Gross","Monthly Deductions","Monthly PAYEE","Monthly Net Pay"]];
+  document.querySelectorAll('#multiTable tbody tr').forEach(tr=>{
+    const inputs=tr.querySelectorAll('input');
+    const G=p(inputs[2].value);
+    const R=p(inputs[3].value);
+    const V=p(inputs[4].value);
+    if(!G) return;
+    const r=computeEmployee(G,R,V);
+    const monthlyGross = r.gross/12;
+    const monthlyDed = (r.pen + r.nh + r.tax + r.vol)/12;
+    const monthlyTax = r.tax/12;
+    const monthlyNet = r.net/12;
+    rows.push([
+      inputs[0].value,
+      inputs[1].value,
+      G.toFixed(2),
+      R.toFixed(2),
+      V.toFixed(2),
+      monthlyGross.toFixed(2),
+      monthlyDed.toFixed(2),
+      monthlyTax.toFixed(2),
+      monthlyNet.toFixed(2)
+    ]);
+  });
+  let csv=rows.map(r=>r.join(',')).join("\n");
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='payroll.csv'; a.click();
+  URL.revokeObjectURL(url);
+};
 
 const gross=document.getElementById('gross');
 const volPension=document.getElementById('volPension');
@@ -267,7 +304,7 @@ function calc(){
 
 window.addEmployeeRow = function(){
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input></td><td><input></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td class="tax">0</td><td class="net">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+  tr.innerHTML=`<td><input></td><td><input></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
   document.querySelector('#multiTable tbody').appendChild(tr);
 };
 
@@ -287,13 +324,13 @@ function computeEmployee(G,R,V){
     tax+=c*x[1];
     rem-=c;
   });
-  return {gross:G,tax,net:G-(tax+pen+nh+V)};
+  return {gross:G,tax,net:G-(tax+pen+nh+V),pen,nh,vol:V};
 }
 
 // Recalc multi
  document.addEventListener('input',e=>{
   if(e.target.closest('#multiTable')){
-    let tg=0,tt=0,tn=0;
+    let tg=0,tt=0,td=0,tn=0;
     document.querySelectorAll('#multiTable tbody tr').forEach(tr=>{
       const i=tr.querySelectorAll('input');
       const G=p(i[2].value);
@@ -301,11 +338,18 @@ function computeEmployee(G,R,V){
       const V=p(i[4].value);
       if(!G) return;
       const r=computeEmployee(G,R,V);
-      tr.querySelector('.tax').textContent=f(r.tax);
-      tr.querySelector('.net').textContent=f(r.net);
-      tg+=r.gross; tt+=r.tax; tn+=r.net;
+      const monthlyGross = r.gross/12;
+      const monthlyDed = (r.pen + r.nh + r.tax + r.vol)/12;
+      const monthlyTax = r.tax/12;
+      const monthlyNet = r.net/12;
+      tr.querySelector('.mgross').textContent=f(monthlyGross);
+      tr.querySelector('.mded').textContent=f(monthlyDed);
+      tr.querySelector('.mtax').textContent=f(monthlyTax);
+      tr.querySelector('.mnet').textContent=f(monthlyNet);
+      tg+=monthlyGross; tt+=monthlyTax; td+=monthlyDed; tn+=monthlyNet;
     });
     totGross.textContent=f(tg);
+    totDed.textContent=f(td);
     totTax.textContent=f(tt);
     totNet.textContent=f(tn);
   }
@@ -325,7 +369,7 @@ window.handleCSV = function(file){
       const rentVal=(parts[3]||'').replace(/,/g,'').trim();
       const volVal=(parts[4]||'').replace(/,/g,'').trim();
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td><input value="${no}"></td><td><input value="${name}"></td><td><input type="number" value="${grossVal}"></td><td><input type="number" value="${rentVal}"></td><td><input type="number" value="${volVal}"></td><td class="tax">0</td><td class="net">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+      tr.innerHTML=`<td><input value="${no}"></td><td><input value="${name}"></td><td><input type="number" value="${grossVal}"></td><td><input type="number" value="${rentVal}"></td><td><input type="number" value="${volVal}"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
       document.querySelector('#multiTable tbody').appendChild(tr);
     });
     document.querySelector('#multiTable').dispatchEvent(new Event('input',{bubbles:true}));
@@ -341,12 +385,9 @@ window.usePayslip = function(btn){
   const G=i[2].value||'';
   const R=i[3].value||'';
   const V=i[4].value||'';
-  // fill calculator inputs
   gross.value=G; rent.value=R; volPension.value=V; calc();
-  // fill payslip header
   psEmpNo.value=empNo;
   psEmpName.value=empName;
-  // set date to current month/year if empty
   if(!psDate.value){
     const d=new Date();
     psDate.value=d.toLocaleString('en-GB',{month:'long',year:'numeric'});
