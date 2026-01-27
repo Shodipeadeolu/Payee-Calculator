@@ -43,7 +43,6 @@
   </style>
 
   <script>
-  // Ensure showTab is defined before HTML onclick usage
   window.showTab = function(t){
     const c=document.getElementById('calcTab');
     const s=document.getElementById('summaryTab');
@@ -170,14 +169,14 @@
   <div class="card" style="grid-column:1/-1">
     <h1>Multiple Employees Payroll</h1>
     <div style="display:flex;gap:12px;margin:12px 0">
-      
       <button onclick="exportExcel()">⬇️ Export to Excel</button>
+      <button onclick="clearSavedData()" style="background:linear-gradient(135deg,#ef4444,#dc2626)">🗑️ Clear Saved Data</button>
       <button onclick="addEmployeeRow()">➕ Add Employee</button>
       <input type="file" accept=".csv" onchange="handleCSV(this.files[0])" />
     </div>
     <table id="multiTable">
       <thead>
-        <tr><th>Employee No</th><th>Name</th><th>Annual Gross</th><th>Annual Rent</th><th>Vol. Pension</th><th>Monthly Gross</th><th>Monthly Deductions</th><th>Monthly PAYEE</th><th>Monthly Net Pay</th><th></th></tr>
+        <tr><th>Employee No</th><th>Name</th><th>Annual Gross</th><th>Annual Rent</th><th>Vol. Pension</th><th>Monthly Gross</th><th>Monthly Deductions</th><th>Monthly PAYEE</th><th>Monthly Net Pay</th><th>Payslip</th><th>Delete</th></tr>
       </thead>
       <tbody></tbody>
     </table>
@@ -192,11 +191,9 @@
 </div>
 
 <script>
-// Utility
 const p=v=>Number(String(v||'').replace(/,/g,''))||0;
 const f=n=>Number(n||0).toLocaleString('en-NG',{maximumFractionDigits:2});
 
-// Export to CSV (Excel)
 window.exportExcel = function(){
   let rows=[["Employee No","Name","Annual Gross","Annual Rent","Voluntary Pension","Monthly Gross","Monthly Deductions","Monthly PAYEE","Monthly Net Pay"]];
   document.querySelectorAll('#multiTable tbody tr').forEach(tr=>{
@@ -210,17 +207,7 @@ window.exportExcel = function(){
     const monthlyDed = (r.pen + r.nh + r.tax + r.vol)/12;
     const monthlyTax = r.tax/12;
     const monthlyNet = r.net/12;
-    rows.push([
-      inputs[0].value,
-      inputs[1].value,
-      G.toFixed(2),
-      R.toFixed(2),
-      V.toFixed(2),
-      monthlyGross.toFixed(2),
-      monthlyDed.toFixed(2),
-      monthlyTax.toFixed(2),
-      monthlyNet.toFixed(2)
-    ]);
+    rows.push([inputs[0].value,inputs[1].value,G.toFixed(2),R.toFixed(2),V.toFixed(2),monthlyGross.toFixed(2),monthlyDed.toFixed(2),monthlyTax.toFixed(2),monthlyNet.toFixed(2)]);
   });
   let csv=rows.map(r=>r.join(',')).join("\n");
   const blob=new Blob([csv],{type:'text/csv'});
@@ -258,7 +245,7 @@ function calc(){
   const pen=(b+h+t)*0.08;
   const nh=b*0.025;
   const relief=Math.min(R*0.2,500000);
-  const vol=volPension?p(volPension.value):0;
+  const vol=p(volPension.value);
 
   pension.textContent=f(pen);
   volPensionDed.textContent=f(vol);
@@ -284,8 +271,6 @@ function calc(){
   monthlyTax.textContent='₦'+f(tax/12)+' per month';
 
   const eff=G?tax/G*100:0;
-  const rateBar=document.getElementById('rateBar');
-  const effectiveRate=document.getElementById('effectiveRate');
   if(rateBar && effectiveRate){
     effectiveRate.textContent=eff.toFixed(2)+'%';
     rateBar.style.width=Math.min(100,eff*2)+'%';
@@ -305,7 +290,7 @@ function calc(){
 
 window.addEmployeeRow = function(){
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input></td><td><input></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+  tr.innerHTML=`<td><input></td><td><input></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td><td><button onclick="deleteRow(this)" style="background:#ef4444;color:white">Delete</button></td>`;
   document.querySelector('#multiTable tbody').appendChild(tr);
 };
 
@@ -328,7 +313,6 @@ function computeEmployee(G,R,V){
   return {gross:G,tax,net:G-(tax+pen+nh+V),pen,nh,vol:V};
 }
 
-// Recalc multi
  document.addEventListener('input',e=>{
   if(e.target.closest('#multiTable')){
     let tg=0,tt=0,td=0,tn=0;
@@ -370,7 +354,7 @@ window.handleCSV = function(file){
       const rentVal=(parts[3]||'').replace(/,/g,'').trim();
       const volVal=(parts[4]||'').replace(/,/g,'').trim();
       const tr=document.createElement('tr');
-      tr.innerHTML=`<td><input value="${no}"></td><td><input value="${name}"></td><td><input type="number" value="${grossVal}"></td><td><input type="number" value="${rentVal}"></td><td><input type="number" value="${volVal}"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+      tr.innerHTML=`<td><input value="${no}"></td><td><input value="${name}"></td><td><input type="number" value="${grossVal}"></td><td><input type="number" value="${rentVal}"></td><td><input type="number" value="${volVal}"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td><td><button onclick="deleteRow(this)" style="background:#ef4444;color:white">Delete</button></td>`;
       document.querySelector('#multiTable tbody').appendChild(tr);
     });
     document.querySelector('#multiTable').dispatchEvent(new Event('input',{bubbles:true}));
@@ -381,21 +365,33 @@ window.handleCSV = function(file){
 window.usePayslip = function(btn){
   const tr=btn.closest('tr');
   const i=tr.querySelectorAll('input');
-  const empNo=i[0].value||'';
-  const empName=i[1].value||'';
-  const G=i[2].value||'';
-  const R=i[3].value||'';
-  const V=i[4].value||'';
-  gross.value=G; rent.value=R; volPension.value=V; calc();
-  psEmpNo.value=empNo;
-  psEmpName.value=empName;
+  gross.value=i[2].value||''; rent.value=i[3].value||''; volPension.value=i[4].value||''; calc();
+  psEmpNo.value=i[0].value||'';
+  psEmpName.value=i[1].value||'';
   if(!psDate.value){
     const d=new Date();
     psDate.value=d.toLocaleString('en-GB',{month:'long',year:'numeric'});
   }
   showTab('summary');
 };
-// ---- LocalStorage Persistence ----
+
+window.deleteRow = function(btn){
+  const tr=btn.closest('tr');
+  tr.remove();
+  saveState();
+  document.querySelector('#multiTable').dispatchEvent(new Event('input',{bubbles:true}));
+};
+
+window.clearSavedData = function(){
+  if(confirm('Clear all saved payroll data?')){
+    localStorage.removeItem('paye_app_state');
+    document.querySelector('#multiTable tbody').innerHTML='';
+    gross.value=''; rent.value=''; volPension.value='';
+    psEmpNo.value=''; psEmpName.value=''; psDate.value=''; psNIN.value='';
+    calc();
+  }
+};
+
 function saveState(){
   const data={
     calc:{gross:gross.value,rent:rent.value,volPension:volPension.value,bp:bp.value,hp:hp.value,tp:tp.value},
@@ -435,7 +431,7 @@ function restoreState(){
       tbody.innerHTML='';
       data.multi.forEach(r=>{
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td><input value="${r.no||''}"></td><td><input value="${r.name||''}"></td><td><input type="number" value="${r.gross||''}"></td><td><input type="number" value="${r.rent||''}"></td><td><input type="number" value="${r.vol||''}"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+        tr.innerHTML=`<td><input value="${r.no||''}"></td><td><input value="${r.name||''}"></td><td><input type="number" value="${r.gross||''}"></td><td><input type="number" value="${r.rent||''}"></td><td><input type="number" value="${r.vol||''}"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td><td><button onclick="deleteRow(this)" style="background:#ef4444;color:white">Delete</button></td>`;
         tbody.appendChild(tr);
       });
       document.querySelector('#multiTable').dispatchEvent(new Event('input',{bubbles:true}));
@@ -444,7 +440,6 @@ function restoreState(){
 }
 
 restoreState();
-
 </script>
 </body>
 </html>
