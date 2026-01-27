@@ -4,12 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nigeria PAYE Calculator 2026</title>
-
   <style>
-    :root{
-      --bg:#0f172a;--card:#111827;--soft:#1f2933;--accent:#22c55e;--accent2:#6366f1;
-      --muted:#9ca3af;--text:#e5e7eb;--danger:#ef4444;
-    }
+    :root{--bg:#0f172a;--card:#111827;--soft:#1f2933;--accent:#22c55e;--accent2:#6366f1;--muted:#9ca3af;--text:#e5e7eb;--danger:#ef4444;}
     *{box-sizing:border-box}
     body{margin:0;padding:24px;font-family:Inter,system-ui;background:radial-gradient(1200px 600px at 10% -10%,#1e293b,transparent),var(--bg);color:var(--text)}
     .tabs{display:flex;gap:12px;margin-bottom:16px}
@@ -29,7 +25,8 @@
     .summary-card strong{font-size:22px;display:block;margin-top:6px}
     table{width:100%;border-collapse:collapse;margin-top:8px}
     tr+tr{border-top:1px dashed #1f2937}
-    td{padding:12px 0;font-size:14px} td:last-child{text-align:right}
+    td,th{padding:12px 0;font-size:14px;text-align:left}
+    td:last-child,th:last-child{text-align:right}
     .bar{height:8px;background:#020617;border-radius:999px;overflow:hidden;margin-top:6px}
     .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0%;transition:width .6s}
     @media(max-width:900px){.app{grid-template-columns:1fr}.summary{grid-template-columns:1fr}}
@@ -40,6 +37,7 @@
 <div class="tabs">
   <button class="ghost" onclick="showTab('calc')">Employee Tax Calculator</button>
   <button class="ghost" onclick="showTab('summary')">Employee Payslip</button>
+  <button class="ghost" onclick="showTab('multi')">Multiple Employees Payroll</button>
 </div>
 
 <div class="app" id="calcTab">
@@ -48,54 +46,42 @@
     <h2>Income</h2>
     <label>Annual Gross Income (₦) <span style="color:var(--danger)">*</span></label>
     <input id="gross" />
-
     <h2>Allowances</h2>
     <label>Basic Salary</label>
     <div class="row"><input id="basic" readonly /><input id="basicPct" class="pill" type="number" value="24.4" /></div>
-
     <label>Housing Allowance</label>
     <div class="row"><input id="housing" readonly /><input id="housingPct" class="pill" type="number" value="14.6" /></div>
-
     <label>Transport Allowance</label>
     <div class="row"><input id="transport" readonly /><input id="transportPct" class="pill" type="number" value="4.9" /></div>
-
     <label>Other Allowances</label>
     <input id="others" readonly />
-
     <h2>Relief</h2>
+    <label>Pension Voluntary Contribution (₦)</label>
+    <input id="volPension" />
     <label>Annual Rent Paid (₦) <span style="color:var(--danger)">*</span></label>
     <input id="rent" />
   </div>
-
   <div class="card">
     <div class="summary">
       <div class="summary-card">
         <span>Effective tax rate</span>
         <strong id="effectiveRate">0%</strong>
         <div class="bar"><span id="rateBar"></span></div>
-        <h3 style="margin:14px 0 6px;font-size:13px">Disclaimer:</h3>
-        <p style="font-size:12px;color:var(--muted);line-height:1.6">
-          This calculator is provided for informational purposes only and does not constitute tax, legal, or financial advice.
-          PAYE outcomes may vary based on individual circumstances and applicable regulations.
-          Please consult a qualified tax professional or the relevant tax authority for official guidance.
-        </p>
-        <p style="font-size:12px;color:var(--muted)">Built by <a href="https://www.linkedin.com/in/adeolu-shodipe-bsc-mba-337290111/" target="_blank" style="color:#60a5fa;text-decoration:none">Adeolu Shodipe</a></p>
       </div>
       <div class="summary-card">
-        <span>PAYE per annum</span>
+        <span>PAYE</span>
         <strong id="annualTax">₦0</strong>
         <span id="monthlyTax">₦0 per month</span>
       </div>
     </div>
-
     <h2>Deductions</h2>
     <table>
-      <tr><td>Pension</td><td id="pension">0</td></tr>
+      <tr><td>Statutory Pension</td><td id="pension">0</td></tr>
+      <tr><td>Voluntary Pension</td><td id="volPensionDed">0</td></tr>
       <tr><td>NHF</td><td id="nhf">0</td></tr>
       <tr><td>Rent relief</td><td id="rentRelief">0</td></tr>
       <tr><td><strong>Taxable income</strong></td><td id="taxable">0</td></tr>
     </table>
-
     <h2>Tax breakdown</h2>
     <table>
       <tr><td>First ₦800,000</td><td id="b1">0</td></tr>
@@ -109,36 +95,26 @@
 </div>
 
 <div class="app" id="summaryTab" style="display:none">
-  <div class="card" style="grid-column:1/-1;padding:0;overflow:hidden">
-
-    <div style="background:#0b1220;padding:18px 24px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;font-size:12px">
-      <div>
-        <strong>Employee No.</strong><br/>
-        <input id="psEmpNo" placeholder="e.g. 001" style="margin-top:6px;padding:6px 8px;font-size:12px" />
-      </div>
-      <div>
-        <strong>Employee</strong><br/>
-        <input id="psEmpName" placeholder="Employee Name" style="margin-top:6px;padding:6px 8px;font-size:12px" />
-      </div>
-      <div>
-        <strong>Date</strong><br/>
-        <input id="psDate" placeholder="e.g. March 2026" style="margin-top:6px;padding:6px 8px;font-size:12px" />
-      </div>
-      
+  <div class="card" style="grid-column:1/-1">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px">
+      <div><label>Employee No.</label><input id="psEmpNo" placeholder="e.g. PW8621"></div>
+      <div><label>Employee</label><input id="psEmpName" placeholder="Employee Name"></div>
+      <div><label>Date</label><input id="psDate" placeholder="e.g. January 2025"></div>
+      <div><label>National ID</label><input id="psNIN" placeholder="e.g. NIN / NHIS"></div>
     </div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #1f2937">
-      <div style="padding:24px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
         <h2>Salary</h2>
         <table>
-          
-          <tr><td><strong>Total Salary</strong></td><td id="psTotalPay">0</td></tr>
+          <tr><td>Total Salary</td><td id="psTotalPay">0</td></tr>
         </table>
       </div>
-      <div style="padding:24px;border-left:1px solid #1f2937">
+      <div>
         <h2>Deductions</h2>
         <table>
-          <tr><td>Pension</td><td id="psPension">0</td></tr>
+          <tr><td>Statutory Pension</td><td id="psPension">0</td></tr>
+          <tr><td>Voluntary Pension</td><td id="psVolPension">0</td></tr>
           <tr><td>NHF</td><td id="psNHF">0</td></tr>
           <tr><td>PAYE</td><td id="psPAYE">0</td></tr>
           <tr><td><strong>Total Deductions</strong></td><td id="psTotalDed">0</td></tr>
@@ -146,60 +122,217 @@
       </div>
     </div>
 
-    <div style="background:#020617;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr">
+    <div style="margin-top:24px;padding-top:16px;border-top:1px dashed #1f2937;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:end">
       <div>
-        <strong>Totals This Period</strong>
-        <p style="margin:6px 0">Salary: <span id="psTotalPay2">0</span></p>
-        <p style="margin:0">Deductions: <span id="psTotalDed2">0</span></p>
+        <h2>Totals This Period</h2>
+        <div>Salary: <strong id="psTPay">0</strong></div>
+        <div>Deductions: <strong id="psTDed">0</strong></div>
       </div>
       <div style="text-align:right">
-        <div style="background:#020617;border-radius:14px;padding:16px;display:inline-block">
-          <span style="font-size:12px;color:var(--muted)">Net Pay</span>
-          <strong style="display:block;font-size:22px;color:var(--accent)" id="psNet">0</strong>
-        </div>
+        <div style="font-size:12px;color:var(--muted)">Net Pay</div>
+        <div style="font-size:28px;color:var(--accent);font-weight:900" id="psNet">0</div>
       </div>
     </div>
+  </div>
+</div>
 
+<div class="app" id="multiTab" style="display:none">
+  <div class="card" style="grid-column:1/-1">
+    <h1>Multiple Employees Payroll</h1>
+    <div style="display:flex;gap:12px;margin:12px 0">
+      <button onclick="addEmployeeRow()">➕ Add Employee</button>
+      <input type="file" accept=".csv" onchange="handleCSV(this.files[0])" />
+    </div>
+    <table id="multiTable">
+      <thead>
+        <tr><th>Employee No</th><th>Name</th><th>Annual Gross</th><th>Annual Rent</th><th>Vol. Pension</th><th>PAYE</th><th>Net Pay</th><th></th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <h2>Company Totals</h2>
+    <table>
+      <tr><td>Total Gross</td><td id="totGross">0</td></tr>
+      <tr><td>Total PAYE</td><td id="totTax">0</td></tr>
+      <tr><td>Total Net Pay</td><td id="totNet">0</td></tr>
+    </table>
   </div>
 </div>
 
 <script>
-function showTab(t){calcTab.style.display=t==='calc'?'grid':'none';summaryTab.style.display=t==='summary'?'grid':'none'}
-const p=v=>Number(String(v).replace(/,/g,''))||0;
-const f=n=>n.toLocaleString('en-NG',{maximumFractionDigits:2});
-const g=gross, r=rent;
-const bp=basicPct,hp=housingPct,tp=transportPct;
+window.showTab = function(t){
+  const c=document.getElementById('calcTab');
+  const s=document.getElementById('summaryTab');
+  const m=document.getElementById('multiTab');
+  if(!c||!s||!m) return;
+  c.style.display = t==='calc'?'grid':'none';
+  s.style.display = t==='summary'?'grid':'none';
+  m.style.display = t==='multi'?'grid':'none';
+};
 
-gross.oninput=rent.oninput=basicPct.oninput=housingPct.oninput=transportPct.oninput=calc;
+const p=v=>Number(String(v||'').replace(/,/g,''))||0;
+const f=n=>Number(n||0).toLocaleString('en-NG',{maximumFractionDigits:2});
+
+const gross=document.getElementById('gross');
+const volPension=document.getElementById('volPension');
+const rent=document.getElementById('rent');
+const basic=document.getElementById('basic');
+const housing=document.getElementById('housing');
+const transport=document.getElementById('transport');
+const others=document.getElementById('others');
+const bp=document.getElementById('basicPct');
+const hp=document.getElementById('housingPct');
+const tp=document.getElementById('transportPct');
+
+[gross,rent,volPension,bp,hp,tp].forEach(i=> i && i.addEventListener('input', calc));
 
 function calc(){
- if(!g.value) return;
- const G=p(g.value),R=p(r.value);
- const b=G*(bp.value/100),h=G*(hp.value/100),t=G*(tp.value/100);
- const o=Math.max(0,G-(b+h+t));
- basic.value=f(b);housing.value=f(h);transport.value=f(t);others.value=f(o);
- const pen=(b+h+t)*.08, nh=b*.025, relief=Math.min(R*.2,500000);
- pension.textContent=f(pen);nhf.textContent=f(nh);rentRelief.textContent=f(relief);
- const tx=Math.max(0,G-(pen+nh+relief));taxable.textContent=f(tx);
- const bands=[[800000,0],[2200000,.15],[9000000,.18],[13000000,.21],[25000000,.23],[1e18,.25]];
- let rem=tx,tax=0,bd=[0,0,0,0,0,0];
- bands.forEach((x,i)=>{if(rem<=0)return;const c=Math.min(rem,x[0]);bd[i]=c*x[1];tax+=bd[i];rem-=c});
- [b1,b2,b3,b4,b5,b6].forEach((e,i)=>e.textContent=f(bd[i]));
- annualTax.textContent='₦'+f(tax);monthlyTax.textContent='₦'+f(tax/12)+' per month';
- const eff=G?tax/G*100:0;effectiveRate.textContent=eff.toFixed(2)+'%';rateBar.style.width=Math.min(100,eff*2)+'%';
+  if(!gross || !gross.value) return;
+  const G=p(gross.value);
+  const R=p(rent.value);
+  const b=G*(bp.value/100);
+  const h=G*(hp.value/100);
+  const t=G*(tp.value/100);
+  basic.value=f(b);
+  housing.value=f(h);
+  transport.value=f(t);
+  others.value=f(Math.max(0,G-(b+h+t)));
 
- // Payslip wiring (monthly)
- 
- psTotalPay.textContent=f(G/12);
- psTotalPay2.textContent=f(G/12);
- psPension.textContent=f(pen/12);
- psNHF.textContent=f(nh/12);
- psPAYE.textContent=f(tax/12);
- const totalDed=(pen+nh+tax)/12;
- psTotalDed.textContent=f(totalDed);
- psTotalDed2.textContent=f(totalDed);
- psNet.textContent=f(G/12-totalDed);
+  const pen=(b+h+t)*0.08;
+  const nh=b*0.025;
+  const relief=Math.min(R*0.2,500000);
+  const vol=volPension?p(volPension.value):0;
+
+  pension.textContent=f(pen);
+  volPensionDed.textContent=f(vol);
+  nhf.textContent=f(nh);
+  rentRelief.textContent=f(relief);
+
+  const taxableIncome=Math.max(0,G-(pen+nh+relief+vol));
+  taxable.textContent=f(taxableIncome);
+
+  const bands=[[800000,0],[2200000,0.15],[9000000,0.18],[13000000,0.21],[25000000,0.23],[1e18,0.25]];
+  let rem=taxableIncome, tax=0;
+  const bd=[0,0,0,0,0,0];
+  bands.forEach((x,i)=>{
+    if(rem<=0) return;
+    const c=Math.min(rem,x[0]);
+    bd[i]=c*x[1];
+    tax+=bd[i];
+    rem-=c;
+  });
+  [b1,b2,b3,b4,b5,b6].forEach((e,i)=> e.textContent=f(bd[i]));
+
+  annualTax.textContent='₦'+f(tax);
+  monthlyTax.textContent='₦'+f(tax/12)+' per month';
+
+  const eff=G?tax/G*100:0;
+  const rateBar=document.getElementById('rateBar');
+  const effectiveRate=document.getElementById('effectiveRate');
+  if(rateBar && effectiveRate){
+    effectiveRate.textContent=eff.toFixed(2)+'%';
+    rateBar.style.width=Math.min(100,eff*2)+'%';
+  }
+
+  psTotalPay.textContent=f(G/12);
+  psPension.textContent=f(pen/12);
+  psVolPension.textContent=f(vol/12);
+  psNHF.textContent=f(nh/12);
+  psPAYE.textContent=f(tax/12);
+  const totalDed=(pen+nh+tax+vol)/12;
+  psTotalDed.textContent=f(totalDed);
+  psTPay.textContent=f(G/12);
+  psTDed.textContent=f(totalDed);
+  psNet.textContent=f(G/12-totalDed);
 }
+
+window.addEmployeeRow = function(){
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><input></td><td><input></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td class="tax">0</td><td class="net">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+  document.querySelector('#multiTable tbody').appendChild(tr);
+};
+
+function computeEmployee(G,R,V){
+  const b=G*(bp.value/100);
+  const h=G*(hp.value/100);
+  const t=G*(tp.value/100);
+  const pen=(b+h+t)*0.08;
+  const nh=b*0.025;
+  const relief=Math.min(R*0.2,500000);
+  const taxableIncome=Math.max(0,G-(pen+nh+relief+V));
+  const bands=[[800000,0],[2200000,0.15],[9000000,0.18],[13000000,0.21],[25000000,0.23],[1e18,0.25]];
+  let rem=taxableIncome, tax=0;
+  bands.forEach(x=>{
+    if(rem<=0) return;
+    const c=Math.min(rem,x[0]);
+    tax+=c*x[1];
+    rem-=c;
+  });
+  return {gross:G,tax,net:G-(tax+pen+nh+V)};
+}
+
+// Recalc multi
+ document.addEventListener('input',e=>{
+  if(e.target.closest('#multiTable')){
+    let tg=0,tt=0,tn=0;
+    document.querySelectorAll('#multiTable tbody tr').forEach(tr=>{
+      const i=tr.querySelectorAll('input');
+      const G=p(i[2].value);
+      const R=p(i[3].value);
+      const V=p(i[4].value);
+      if(!G) return;
+      const r=computeEmployee(G,R,V);
+      tr.querySelector('.tax').textContent=f(r.tax);
+      tr.querySelector('.net').textContent=f(r.net);
+      tg+=r.gross; tt+=r.tax; tn+=r.net;
+    });
+    totGross.textContent=f(tg);
+    totTax.textContent=f(tt);
+    totNet.textContent=f(tn);
+  }
+});
+
+window.handleCSV = function(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const text=e.target.result.replace(/\r/g,'');
+    const lines=text.trim().split(/\n/);
+    lines.slice(1).forEach(l=>{
+      if(!l.trim()) return;
+      const parts=l.split(',');
+      const no=(parts[0]||'').trim();
+      const name=(parts[1]||'').trim();
+      const grossVal=(parts[2]||'').replace(/,/g,'').trim();
+      const rentVal=(parts[3]||'').replace(/,/g,'').trim();
+      const volVal=(parts[4]||'').replace(/,/g,'').trim();
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td><input value="${no}"></td><td><input value="${name}"></td><td><input type="number" value="${grossVal}"></td><td><input type="number" value="${rentVal}"></td><td><input type="number" value="${volVal}"></td><td class="tax">0</td><td class="net">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+      document.querySelector('#multiTable tbody').appendChild(tr);
+    });
+    document.querySelector('#multiTable').dispatchEvent(new Event('input',{bubbles:true}));
+  };
+  reader.readAsText(file);
+};
+
+window.usePayslip = function(btn){
+  const tr=btn.closest('tr');
+  const i=tr.querySelectorAll('input');
+  const empNo=i[0].value||'';
+  const empName=i[1].value||'';
+  const G=i[2].value||'';
+  const R=i[3].value||'';
+  const V=i[4].value||'';
+  // fill calculator inputs
+  gross.value=G; rent.value=R; volPension.value=V; calc();
+  // fill payslip header
+  psEmpNo.value=empNo;
+  psEmpName.value=empName;
+  // set date to current month/year if empty
+  if(!psDate.value){
+    const d=new Date();
+    psDate.value=d.toLocaleString('en-GB',{month:'long',year:'numeric'});
+  }
+  showTab('summary');
+};
 </script>
 </body>
 </html>
