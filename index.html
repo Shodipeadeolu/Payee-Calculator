@@ -395,6 +395,56 @@ window.usePayslip = function(btn){
   }
   showTab('summary');
 };
+// ---- LocalStorage Persistence ----
+function saveState(){
+  const data={
+    calc:{gross:gross.value,rent:rent.value,volPension:volPension.value,bp:bp.value,hp:hp.value,tp:tp.value},
+    payslip:{empNo:psEmpNo.value,empName:psEmpName.value,date:psDate.value,nin:psNIN.value},
+    multi:[...document.querySelectorAll('#multiTable tbody tr')].map(tr=>{
+      const i=tr.querySelectorAll('input');
+      return {no:i[0].value,name:i[1].value,gross:i[2].value,rent:i[3].value,vol:i[4].value};
+    })
+  };
+  localStorage.setItem('paye_app_state',JSON.stringify(data));
+}
+
+document.addEventListener('input',saveState);
+
+function restoreState(){
+  const raw=localStorage.getItem('paye_app_state');
+  if(!raw) return;
+  try{
+    const data=JSON.parse(raw);
+    if(data.calc){
+      gross.value=data.calc.gross||'';
+      rent.value=data.calc.rent||'';
+      volPension.value=data.calc.volPension||'';
+      bp.value=data.calc.bp||bp.value;
+      hp.value=data.calc.hp||hp.value;
+      tp.value=data.calc.tp||tp.value;
+      if(gross.value) calc();
+    }
+    if(data.payslip){
+      psEmpNo.value=data.payslip.empNo||'';
+      psEmpName.value=data.payslip.empName||'';
+      psDate.value=data.payslip.date||'';
+      psNIN.value=data.payslip.nin||'';
+    }
+    if(Array.isArray(data.multi)){
+      const tbody=document.querySelector('#multiTable tbody');
+      tbody.innerHTML='';
+      data.multi.forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td><input value="${r.no||''}"></td><td><input value="${r.name||''}"></td><td><input type="number" value="${r.gross||''}"></td><td><input type="number" value="${r.rent||''}"></td><td><input type="number" value="${r.vol||''}"></td><td class="mgross">0</td><td class="mded">0</td><td class="mtax">0</td><td class="mnet">0</td><td><button onclick="usePayslip(this)">Payslip</button></td>`;
+        tbody.appendChild(tr);
+      });
+      document.querySelector('#multiTable').dispatchEvent(new Event('input',{bubbles:true}));
+    }
+  }catch(e){console.warn('Restore failed',e);}
+}
+
+restoreState();
+
 </script>
 </body>
 </html>
