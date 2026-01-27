@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nigeria PAYE Calculator 2026</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KJCEWNH0Q5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KJCEWNH0Q5');
+  </script>
   <style>
     :root{--bg:#0f172a;--card:#111827;--soft:#1f2933;--accent:#22c55e;--accent2:#6366f1;--muted:#9ca3af;--text:#e5e7eb;--danger:#ef4444;}
     *{box-sizing:border-box}
@@ -11,7 +20,7 @@
     .tabs{display:flex;gap:12px;margin-bottom:16px}
     .app{max-width:1200px;margin:auto;display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
     .card{background:linear-gradient(180deg,#111827,#0b1220);border-radius:22px;padding:24px;box-shadow:0 25px 50px rgba(0,0,0,.35)}
-    h1{font-size:28px;margin:0} h2{margin:26px 0 12px;font-size:15px;color:#c7d2fe}
+    h1{font-size:28px;margin:0} h2{margin:26px 0 12px;font-size:16px;color:#e0e7ff;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
     label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px}
     input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #1f2937;background:var(--soft);color:var(--text)}
     .row{display:grid;grid-template-columns:1fr 88px;gap:12px}
@@ -63,6 +72,13 @@
   </div>
   <div class="card">
     <div class="summary">
+      <div class="summary-card" style="grid-column:1/-1">
+        <span>Disclaimer:</span>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4">
+          This calculator is provided for informational purposes only and does not constitute tax, legal, or financial advice. PAYE outcomes may vary based on individual circumstances and applicable regulations. Please consult a qualified tax professional or the relevant tax authority for official guidance.
+        </div>
+        <div style="margin-top:10px;font-size:12px;color:var(--muted)">Built by <a href="https://www.linkedin.com/in/adeolu-shodipe-bsc-mba-337290111/" target="_blank" style="color:#60a5fa;text-decoration:none">Adeolu Shodipe</a></div>
+      </div>
       <div class="summary-card">
         <span>Effective tax rate</span>
         <strong id="effectiveRate">0%</strong>
@@ -74,6 +90,7 @@
         <span id="monthlyTax">₦0 per month</span>
       </div>
     </div>
+    <div class="section">
     <h2>Deductions</h2>
     <table>
       <tr><td>Statutory Pension</td><td id="pension">0</td></tr>
@@ -82,15 +99,18 @@
       <tr><td>Rent relief</td><td id="rentRelief">0</td></tr>
       <tr><td><strong>Taxable income</strong></td><td id="taxable">0</td></tr>
     </table>
+  </div>
+    <div class="section">
     <h2>Tax breakdown</h2>
     <table>
-      <tr><td>First ₦800,000</td><td id="b1">0</td></tr>
-      <tr><td>Next ₦2,200,000</td><td id="b2">0</td></tr>
-      <tr><td>Next ₦9,000,000</td><td id="b3">0</td></tr>
-      <tr><td>Next ₦13,000,000</td><td id="b4">0</td></tr>
-      <tr><td>Next ₦25,000,000</td><td id="b5">0</td></tr>
-      <tr><td>Above ₦50,000,000</td><td id="b6">0</td></tr>
+      <tr><td>First ₦800,000 @0%</td><td id="b1">0</td></tr>
+      <tr><td>Next ₦2,200,000 @15%</td><td id="b2">0</td></tr>
+      <tr><td>Next ₦9,000,000 @18%</td><td id="b3">0</td></tr>
+      <tr><td>Next ₦13,000,000 @21%</td><td id="b4">0</td></tr>
+      <tr><td>Next ₦25,000,000 @23%</td><td id="b5">0</td></tr>
+      <tr><td>Above ₦50,000,000 @25%</td><td id="b6">0</td></tr>
     </table>
+  </div>
   </div>
 </div>
 
